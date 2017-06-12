@@ -107,3 +107,25 @@ for enrollment in enrollments:
     if student not in uniqueDataEntryEngagement and enrollment['join_date'] != enrollment['cancel_date']:
         count += 1
 print('\n\n', count)
+
+# count the account which was soley made for testing
+count = 0
+test_account = set()
+for enrollment in enrollments:
+    if (enrollment['is_udacity']):
+        test_account.add(enrollment['account_key'])
+print(len(test_account))
+
+
+# function for deleting test account
+def deleteTestAccountEntry(filename):
+    non_udacity_data = []
+    for i in filename:
+        if i['account_key'] not in test_account:
+            non_udacity_data.append(i)
+    return non_udacity_data
+
+
+non_udacity_enrollments = deleteTestAccountEntry(enrollments)
+non_udacity_engagement = deleteTestAccountEntry(daily_engagement)
+non_udacity_submission = deleteTestAccountEntry(submissions)
