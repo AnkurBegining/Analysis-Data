@@ -99,3 +99,11 @@ print('\n\n')
 print("Number of true Enrollment: ", len(uniqueDataEntryEmployee))
 print("Number of true Engagement", len(uniqueDataEntryEngagement))
 print("Number of true submission", len(uniqueDataEntrySubmission))
+
+# code for seeing if some one is enrolled the is he or she has engagement of not
+count = 0
+for enrollment in enrollments:
+    student = enrollment['account_key']
+    if student not in uniqueDataEntryEngagement and enrollment['join_date'] != enrollment['cancel_date']:
+        count += 1
+print('\n\n', count)
