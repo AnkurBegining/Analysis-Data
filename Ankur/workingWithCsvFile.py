@@ -83,5 +83,19 @@ for engagement in daily_engagement:
 def uniqueDataEntry(filename):
     uniqueDataset = set()
     for i in filename:
-        uniqueDataset.add(i)
+        uniqueDataset.add(i['account_key'])
     return uniqueDataset
+
+
+# print number of row and unique entry
+print('\n\n')
+print("Number of row Enrollments: ", countNumberOfRow(enrollments))
+print("Number of row Engagement: ", countNumberOfRow(daily_engagement))
+print("Number of row Submissions: ", countNumberOfRow(submissions))
+uniqueDataEntryEmployee = uniqueDataEntry(enrollments)
+uniqueDataEntryEngagement = uniqueDataEntry(daily_engagement)
+uniqueDataEntrySubmission = uniqueDataEntry(submissions)
+print('\n\n')
+print("Number of true Enrollment: ", len(uniqueDataEntryEmployee))
+print("Number of true Engagement", len(uniqueDataEntryEngagement))
+print("Number of true submission", len(uniqueDataEntrySubmission))
