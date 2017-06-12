@@ -30,3 +30,11 @@ def parse_date(date):
         return None
     else:
         return dt.strptime(date, '%Y-%m-%d')
+
+
+# checking any string and convert it into the integer.
+def parse_in_int(i):
+    if i == '':
+        return None
+    else:
+        return int(i)
