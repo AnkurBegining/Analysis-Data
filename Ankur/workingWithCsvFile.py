@@ -33,8 +33,36 @@ def parse_date(date):
 
 
 # checking any string and convert it into the integer.
-def parse_in_int(i):
+def parse_maybe_int(i):
     if i == '':
         return None
     else:
         return int(i)
+
+
+# Clean Date for enrollments
+for enrollment in enrollments:
+    enrollment['join_date'] = parse_date(enrollment['join_date'])
+    enrollment['cancel_date'] = parse_date(enrollment['cancel_date'])
+    enrollment['is_udacity'] = enrollment['is_udacity'] == 'True'
+    enrollment['is_canceled'] = enrollment['is_canceled'] == 'True'
+    enrollment['days_to_cancel'] = parse_maybe_int(enrollment['days_to_cancel'])
+
+# Clean Data for dialy_engagement
+for engagement_record in daily_engagement:
+    engagement_record['lessons_completed'] = int(float(engagement_record['lessons_completed']))
+    engagement_record['num_courses_visited'] = int(float(engagement_record['num_courses_visited']))
+    engagement_record['projects_completed'] = int(float(engagement_record['projects_completed']))
+    engagement_record['total_minutes_visited'] = float(engagement_record['total_minutes_visited'])
+    engagement_record['utc_date'] = parse_date(engagement_record['utc_date'])
+
+# Clean up the data types in the submissions table
+for submission in submissions:
+    submission['completion_date'] = parse_date(submission['completion_date'])
+    submission['creation_date'] = parse_date(submission['creation_date'])
+
+# Data after one clean up
+print('\n\n')
+print(enrollments[0])
+print(daily_engagement[0])
+print(submissions[0])
