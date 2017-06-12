@@ -66,3 +66,22 @@ print('\n\n')
 print(enrollments[0])
 print(daily_engagement[0])
 print(submissions[0])
+
+
+# fuction for conting number of row in all three table
+def countNumberOfRow(filename):
+    return (len(filename))
+
+
+# function to convert 'acct' of daily engagement to 'account_key
+for engagement in daily_engagement:
+    engagement['account_key'] = engagement['acct']
+    del [engagement['acct']]
+
+
+# function for counting number of unique entry in table
+def uniqueDataEntry(filename):
+    uniqueDataset = set()
+    for i in filename:
+        uniqueDataset.add(i)
+    return uniqueDataset
