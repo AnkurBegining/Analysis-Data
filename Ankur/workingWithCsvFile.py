@@ -203,20 +203,32 @@ engagement_by_account = defaultdict(list)
 for engagement_record in paid_engagement_in_first_week:
     account_key = engagement_record['account_key']
     engagement_by_account[account_key].append(engagement_record)
-from pprint import *
 
-pprint(engagement_by_account)
+# pprint(engagement_by_account)
 
-# count total time spend by paid student in first week
+#count total time spend by paid student in first week
 total_minute_spend_by_account = {}
-i = 1
+
 
 for account_key, engagement_by_student in engagement_by_account.items():
-    if (i == 1):
-        print("Account = ", account_key, '\n', "Engagement by Student", engagement_by_student)
-        i = 2
+
     total_minute = 0
     for engagement_record in engagement_by_student:
         total_minute += engagement_record['total_minutes_visited']
     total_minute_spend_by_account[account_key] = total_minute
-pprint(total_minute_spend_by_account)
+#pprint(total_minute_spend_by_account)
+
+total_minutes = total_minute_spend_by_account.values()
+
+# find mean, standard deviatiion, max, min
+import numpy as np
+
+arr = np.array(list(map(float, total_minutes)))
+meanOfArr = arr.mean()
+standradDeviationOfArr = arr.std()
+minOfArray = arr.min()
+maxOfArray = arr.max()
+print("Mean of time spend: ", meanOfArr)
+print("Standard Deviation of given list: ", standradDeviationOfArr)
+print("Minimum time spend by paid student: ", minOfArray)
+print("Maximimum time spend by paid student: ", maxOfArray)
