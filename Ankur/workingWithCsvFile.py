@@ -182,7 +182,7 @@ print("Number of paid Submission ", len(paid_submission))
 
 def with_in_one_week(join_date, engagement_date):
     days_delta = engagement_date - join_date
-    return days_delta.days < 7 and days_delta.days >= 0
+    return (days_delta.days < 7 and days_delta.days >= 0.0)
 
 
 # create list of first week engagement of paid user
@@ -193,4 +193,30 @@ for engagement in paid_engagement:
     engagement_date = engagement['utc_date']
     if with_in_one_week(join_date, engagement_date):
         paid_engagement_in_first_week.append(engagement)
-print("Paid Engagement in first week", paid_engagement_in_first_week[0])
+print("Paid Engagement in first week", len(paid_engagement_in_first_week))
+
+# Group Engagement data by account key
+from collections import *
+
+engagement_by_account = defaultdict(list)
+
+for engagement_record in paid_engagement_in_first_week:
+    account_key = engagement_record['account_key']
+    engagement_by_account[account_key].append(engagement_record)
+from pprint import *
+
+pprint(engagement_by_account)
+
+# count total time spend by paid student in first week
+total_minute_spend_by_account = {}
+i = 1
+
+for account_key, engagement_by_student in engagement_by_account.items():
+    if (i == 1):
+        print("Account = ", account_key, '\n', "Engagement by Student", engagement_by_student)
+        i = 2
+    total_minute = 0
+    for engagement_record in engagement_by_student:
+        total_minute += engagement_record['total_minutes_visited']
+    total_minute_spend_by_account[account_key] = total_minute
+pprint(total_minute_spend_by_account)
