@@ -131,18 +131,11 @@ non_udacity_enrollments = deleteTestAccountEntry(enrollments)
 non_udacity_engagement = deleteTestAccountEntry(daily_engagement)
 non_udacity_submission = deleteTestAccountEntry(submissions)
 
-# print number of row and unique entry
+
 print('\n\n')
-print("Number of row Enrollments: ", countNumberOfRow(non_udacity_enrollments))
-print("Number of row Engagement: ", countNumberOfRow(non_udacity_engagement))
-print("Number of row Submissions: ", countNumberOfRow(non_udacity_submission))
-uniqueDataEntryEmployee = uniqueDataEntry(non_udacity_enrollments)
-uniqueDataEntryEngagement = uniqueDataEntry(non_udacity_engagement)
-uniqueDataEntrySubmission = uniqueDataEntry(non_udacity_submission)
-print('\n\n')
-print("Number of true Enrollment: ", len(uniqueDataEntryEmployee))
-print("Number of true Engagement", len(uniqueDataEntryEngagement))
-print("Number of true submission", len(uniqueDataEntrySubmission))
+print("Non - Udacity Enrollment: ", len(non_udacity_enrollments))
+print("Non - Udacity Engagement", len(non_udacity_engagement))
+print("Non - Udacity submission", len(non_udacity_submission))
 
 paid_student = {}
 
@@ -158,7 +151,7 @@ def countTrueStudent():
 
 
 countTrueStudent()
-print(len(paid_student))
+print("Paid_student ", len(paid_student))
 '''from pprint import *
 pprint(paid_student)'''
 
@@ -166,16 +159,38 @@ pprint(paid_student)'''
 # remove free_trail user
 def remove_free_trail_user(data):
     non_data = []
-    for enrollment in data:
-        if enrollment['account_key'] in paid_student:
-            non_data.append(enrollment)
+    for data_entry in data:
+        if data_entry['account_key'] in paid_student:
+            non_data.append(data_entry)
+
     return non_data
 
 
 paid_enrollment = remove_free_trail_user(non_udacity_enrollments)
 paid_engagement = remove_free_trail_user(non_udacity_engagement)
 paid_submission = remove_free_trail_user(non_udacity_submission)
+print("Paid Enrollment", paid_enrollment[0])
+print("Paid Engagement", paid_engagement[0])
+print("Paid submission", paid_submission[0])
 print('\n\n')
 print("Number of paid Enrollment ", len(paid_enrollment))
 print("Number of paid Engagement ", len(paid_engagement))
 print("Number of paid Submission ", len(paid_submission))
+
+
+# Now we would analyse for first week
+
+def with_in_one_week(join_date, engagement_date):
+    days_delta = engagement_date - join_date
+    return days_delta.days < 7 and days_delta.days >= 0
+
+
+# create list of first week engagement of paid user
+paid_engagement_in_first_week = []
+for engagement in paid_engagement:
+    account_key = engagement['account_key']
+    join_date = paid_student[account_key]
+    engagement_date = engagement['utc_date']
+    if with_in_one_week(join_date, engagement_date):
+        paid_engagement_in_first_week.append(engagement)
+print("Paid Engagement in first week", paid_engagement_in_first_week[0])
