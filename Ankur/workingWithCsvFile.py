@@ -143,3 +143,39 @@ print('\n\n')
 print("Number of true Enrollment: ", len(uniqueDataEntryEmployee))
 print("Number of true Engagement", len(uniqueDataEntryEngagement))
 print("Number of true submission", len(uniqueDataEntrySubmission))
+
+paid_student = {}
+
+
+def countTrueStudent():
+    for enrollment in non_udacity_enrollments:
+        if not enrollment['is_canceled'] or enrollment['days_to_cancel'] > 7:
+            account_key = enrollment['account_key']
+            enrollment_date = enrollment['join_date']
+
+            if account_key not in paid_student or enrollment_date > paid_student[account_key]:
+                paid_student[account_key] = enrollment_date
+
+
+countTrueStudent()
+print(len(paid_student))
+'''from pprint import *
+pprint(paid_student)'''
+
+
+# remove free_trail user
+def remove_free_trail_user(data):
+    non_data = []
+    for enrollment in data:
+        if enrollment['account_key'] in paid_student:
+            non_data.append(enrollment)
+    return non_data
+
+
+paid_enrollment = remove_free_trail_user(non_udacity_enrollments)
+paid_engagement = remove_free_trail_user(non_udacity_engagement)
+paid_submission = remove_free_trail_user(non_udacity_submission)
+print('\n\n')
+print("Number of paid Enrollment ", len(paid_enrollment))
+print("Number of paid Engagement ", len(paid_engagement))
+print("Number of paid Submission ", len(paid_submission))
