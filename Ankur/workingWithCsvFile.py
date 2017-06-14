@@ -131,7 +131,6 @@ non_udacity_enrollments = deleteTestAccountEntry(enrollments)
 non_udacity_engagement = deleteTestAccountEntry(daily_engagement)
 non_udacity_submission = deleteTestAccountEntry(submissions)
 
-
 print('\n\n')
 print("Non - Udacity Enrollment: ", len(non_udacity_enrollments))
 print("Non - Udacity Engagement", len(non_udacity_engagement))
@@ -206,29 +205,48 @@ for engagement_record in paid_engagement_in_first_week:
 
 # pprint(engagement_by_account)
 
-#count total time spend by paid student in first week
+# count total time spend by paid student in first week
 total_minute_spend_by_account = {}
 
 
-for account_key, engagement_by_student in engagement_by_account.items():
+def analyseData(dataToanalyse):
+    for account_key, engagement_by_student in engagement_by_account.items():
+        total_minute = 0
+        for engagement_record in engagement_by_student:
+            total_minute += engagement_record[dataToanalyse]
+        total_minute_spend_by_account[account_key] = total_minute
 
-    total_minute = 0
-    for engagement_record in engagement_by_student:
-        total_minute += engagement_record['total_minutes_visited']
-    total_minute_spend_by_account[account_key] = total_minute
-#pprint(total_minute_spend_by_account)
+    total = total_minute_spend_by_account.values()
 
-total_minutes = total_minute_spend_by_account.values()
+    return total
 
-# find mean, standard deviatiion, max, min
+
+total_minutes_visited = analyseData('total_minutes_visited')
 import numpy as np
 
-arr = np.array(list(map(float, total_minutes)))
-meanOfArr = arr.mean()
-standradDeviationOfArr = arr.std()
-minOfArray = arr.min()
-maxOfArray = arr.max()
-print("Mean of time spend: ", meanOfArr)
-print("Standard Deviation of given list: ", standradDeviationOfArr)
-print("Minimum time spend by paid student: ", minOfArray)
-print("Maximimum time spend by paid student: ", maxOfArray)
+
+def findmeanEtc(data_point):
+    arr = np.array(list(map(float, data_point)))
+    resultingList = []
+    resultingList.append(arr.mean())
+    resultingList.append(arr.std())
+    resultingList.append(arr.min())
+    resultingList.append(arr.max())
+    return resultingList
+
+
+meanEtcOfMinutesSpend = findmeanEtc(total_minutes_visited)
+print('\n\n')
+print("Mean of time spend by Paid student in first week: ", meanEtcOfMinutesSpend[0])
+print("Standard deviation of time spend in first week: ", meanEtcOfMinutesSpend[1])
+print("Minimum time spend by paid user in first week: ", meanEtcOfMinutesSpend[2])
+print("Maximum time spend by paid user in first week: ", meanEtcOfMinutesSpend[3])
+
+total_lesson_completed = analyseData('lessons_completed')
+
+meanEtcOfLessonsCompleted = findmeanEtc(total_lesson_completed)
+print("\n\n")
+print("Mean of lesson completed by Paid student in first week: ", meanEtcOfLessonsCompleted[0])
+print("Standard deviation of lesson completed in first week: ", meanEtcOfLessonsCompleted[1])
+print("Minimum time spend by lesson completed in first week: ", meanEtcOfLessonsCompleted[2])
+print("Maximum time spend by lesson completed in first week: ", meanEtcOfLessonsCompleted[3])
