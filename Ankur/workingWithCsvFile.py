@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+from pprint import *
 
 from unicodecsv import *
 
@@ -204,19 +205,20 @@ print("Paid Engagement in first week", len(paid_engagement_in_first_week))
 from collections import *
 
 engagement_by_account = defaultdict(list)
-
 for engagement_record in paid_engagement_in_first_week:
     account_key = engagement_record['account_key']
     engagement_by_account[account_key].append(engagement_record)
 
+
 # pprint(engagement_by_account)
 
 # count total time spend by paid student in first week
-total_minute_spend_by_account = {}
 
 
-def analyseData(dataToanalyse):
-    for account_key, engagement_by_student in engagement_by_account.items():
+
+def analyseData(data_dict, dataToanalyse):
+    total_minute_spend_by_account = {}
+    for account_key, engagement_by_student in data_dict.items():
         total_minute = 0
         for engagement_record in engagement_by_student:
             total_minute += engagement_record[dataToanalyse]
@@ -227,7 +229,7 @@ def analyseData(dataToanalyse):
     return total
 
 
-total_minutes_visited = analyseData('total_minutes_visited')
+total_minutes_visited = analyseData(engagement_by_account, 'total_minutes_visited')
 import numpy as np
 
 
@@ -248,7 +250,7 @@ print("Standard deviation of time spend in first week: ", meanEtcOfMinutesSpend[
 print("Minimum time spend by paid user in first week: ", meanEtcOfMinutesSpend[2])
 print("Maximum time spend by paid user in first week: ", meanEtcOfMinutesSpend[3])
 
-total_lesson_completed = analyseData('lessons_completed')
+total_lesson_completed = analyseData(engagement_by_account, 'lessons_completed')
 
 meanEtcOfLessonsCompleted = findmeanEtc(total_lesson_completed)
 print("\n\n")
@@ -258,10 +260,82 @@ print("Minimum time spend by lesson completed in first week: ", meanEtcOfLessons
 print("Maximum time spend by lesson completed in first week: ", meanEtcOfLessonsCompleted[3])
 
 # mean etc of course visited in first week
-total_course_visited = analyseData('has_visited')
+total_course_visited = analyseData(engagement_by_account, 'has_visited')
 meanEtcOfCourseVisited = findmeanEtc(total_course_visited)
 print('\n\n')
 print("Mean of course visited: ", meanEtcOfCourseVisited[0])
 print("SD of course visitedd: ", meanEtcOfCourseVisited[1])
 print("Minimum number of course visited: ", meanEtcOfCourseVisited[2])
 print("Maximum number of course visited: ", meanEtcOfCourseVisited[3])
+
+pprint(paid_submission[0])
+
+passingEngagement = []
+nonPassingEngagement = []
+passSubwaySet = set()
+subway_project_lesson_key = ['746169184', '3176718735']
+for submission in paid_submission:
+    if submission['lesson_key'] in subway_project_lesson_key \
+            and (submission['assigned_rating'] == 'PASSED' or submission['assigned_rating'] == 'DISTINCTION'):
+        passSubwaySet.add(submission['account_key'])
+
+print(len(passSubwaySet))
+
+passing_engagements = []
+non_passing_engagements = []
+
+for account, engagements in engagement_by_account.items():
+    if account in passSubwaySet:
+        passing_engagements += engagements
+    else:
+        non_passing_engagements += engagements
+
+print(len(passing_engagements))
+print(len(non_passing_engagements))
+print("AAA")
+pprint(passing_engagements[0])
+passing_engagements_by_account = defaultdict(list)
+non_passing_engagements_by_account = defaultdict(list)
+
+for account, engagements in engagement_by_account.items():
+    if account in passSubwaySet:
+        passing_engagements_by_account[account] = engagements
+    else:
+        non_passing_engagements_by_account[account] = engagements
+print(len(passing_engagements_by_account))
+print(len(non_passing_engagements_by_account))
+
+# pprint(passing_engagements_by_account)
+total_minutes_visit_by_passsing_engagement_by_account = analyseData(passing_engagements_by_account,
+                                                                    'total_minutes_visited')
+
+meanEtcOfpassingEngagementByaccount = findmeanEtc(total_minutes_visit_by_passsing_engagement_by_account)
+print("\n\n")
+print("Mean of lesson completed by Paid student in first week: ", meanEtcOfpassingEngagementByaccount[0])
+print("Standard deviation of lesson completed in first week: ", meanEtcOfpassingEngagementByaccount[1])
+print("Minimum time spend by lesson completed in first week: ", meanEtcOfpassingEngagementByaccount[2])
+print("Maximum time spend by lesson completed in first week: ", meanEtcOfpassingEngagementByaccount[3])
+
+total_minutes_visit_by_non_passsing_engagement_by_account = analyseData(non_passing_engagements_by_account,
+                                                                        'total_minutes_visited')
+
+meanEtcOfNonpassingEngagementByaccount = findmeanEtc(total_minutes_visit_by_non_passsing_engagement_by_account)
+print("\n\n")
+print("Mean of lesson completed by Paid student in first week: ", meanEtcOfNonpassingEngagementByaccount[0])
+print("Standard deviation of lesson completed in first week: ", meanEtcOfNonpassingEngagementByaccount[1])
+print("Minimum time spend by lesson completed in first week: ", meanEtcOfNonpassingEngagementByaccount[2])
+print("Maximum time spend by lesson completed in first week: ", meanEtcOfNonpassingEngagementByaccount[3])
+
+# For Drawing histogram
+import matplotlib.pyplot as plt
+
+data1 = meanEtcOfpassingEngagementByaccount
+f = plt.figure(1)
+plt.hist(data1)
+f.show()
+
+data2 = meanEtcOfNonpassingEngagementByaccount
+g = plt.figure(2)
+plt.hist(data2)
+g.show()
+input()
