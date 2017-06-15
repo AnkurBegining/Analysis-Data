@@ -176,12 +176,18 @@ print("Number of paid Enrollment ", len(paid_enrollment))
 print("Number of paid Engagement ", len(paid_engagement))
 print("Number of paid Submission ", len(paid_submission))
 
+for engagement in paid_engagement:
+    if engagement['num_courses_visited'] > 0:
+        engagement['has_visited'] = 1
+    else:
+        engagement['has_visited'] = 0
+
 
 # Now we would analyse for first week
 
 def with_in_one_week(join_date, engagement_date):
     days_delta = engagement_date - join_date
-    return (days_delta.days < 7 and days_delta.days >= 0.0)
+    return days_delta.days < 7 and days_delta.days >= 0.0
 
 
 # create list of first week engagement of paid user
@@ -250,3 +256,12 @@ print("Mean of lesson completed by Paid student in first week: ", meanEtcOfLesso
 print("Standard deviation of lesson completed in first week: ", meanEtcOfLessonsCompleted[1])
 print("Minimum time spend by lesson completed in first week: ", meanEtcOfLessonsCompleted[2])
 print("Maximum time spend by lesson completed in first week: ", meanEtcOfLessonsCompleted[3])
+
+# mean etc of course visited in first week
+total_course_visited = analyseData('has_visited')
+meanEtcOfCourseVisited = findmeanEtc(total_course_visited)
+print('\n\n')
+print("Mean of course visited: ", meanEtcOfCourseVisited[0])
+print("SD of course visitedd: ", meanEtcOfCourseVisited[1])
+print("Minimum number of course visited: ", meanEtcOfCourseVisited[2])
+print("Maximum number of course visited: ", meanEtcOfCourseVisited[3])
